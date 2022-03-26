@@ -4,32 +4,28 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.GenericGenerator;
-
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "seat")
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 public class Seat implements Serializable {
-
-	@Id
-    @GeneratedValue(generator = "uuid-gen")
-    @GenericGenerator(name = "uuid-gen", strategy = "uuid2")
-    @Column(name = "set_id")
-    private String id;
-	
-	@EqualsAndHashCode.Exclude
-	@ManyToOne
-    @JoinColumn(name = "sec_id")
+		
+	@Id	
+	@OneToOne
+    @JoinColumn(name = "sec_id", nullable = false)
     private Sector sector;
+	
+	@Id	
+	@Column(name="sea_num", nullable = false)
+    private int seaNum;
 }

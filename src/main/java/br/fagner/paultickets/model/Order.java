@@ -15,11 +15,13 @@ import org.hibernate.annotations.GenericGenerator;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "order")
-@AllArgsConstructor
+@Data
+@NoArgsConstructor
 public class Order implements Serializable {
 
 	@Id
@@ -34,10 +36,10 @@ public class Order implements Serializable {
 	@OneToOne
 	@JoinColumn(name = "ors_id", nullable = false)
 	@JsonManagedReference
-    private final OrderStatus orderStatus;
+    private OrderStatus orderStatus;
 	
 	@OneToOne
 	@JoinColumn(name = "usr_id", nullable = false)
 	@JsonManagedReference
-    private final User user;
+    private User user;
 }

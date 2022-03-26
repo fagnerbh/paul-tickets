@@ -11,6 +11,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
@@ -18,6 +19,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "user")
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 public class User implements Serializable {
 
 	@Id

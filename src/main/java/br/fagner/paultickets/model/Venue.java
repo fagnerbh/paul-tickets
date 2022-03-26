@@ -16,6 +16,7 @@ import org.hibernate.annotations.GenericGenerator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
@@ -24,6 +25,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "venue")
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 public class Venue implements Serializable {
 	
 	@Id
