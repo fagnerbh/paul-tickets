@@ -5,14 +5,12 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.GenericGenerator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -29,8 +27,6 @@ import lombok.NoArgsConstructor;
 public class Sector {
 	
 	@Id
-    @GeneratedValue(generator = "uuid-gen")
-    @GenericGenerator(name = "uuid-gen", strategy = "uuid2")
     @Column(name = "sec_id")
     private String id;
 	
@@ -40,7 +36,7 @@ public class Sector {
     private Venue venue;
 	
 	@EqualsAndHashCode.Exclude
-    @OneToMany(mappedBy = "sector")    
+    @OneToMany(mappedBy = "sector", fetch = FetchType.LAZY)    
     @JsonIgnore
     private final Set<Seat> seats = new HashSet<>();
 }

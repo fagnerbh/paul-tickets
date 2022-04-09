@@ -2,43 +2,43 @@ package br.fagner.paultickets.model;
 
 import java.io.Serializable;
 
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
+import javax.persistence.MapsId;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 
 @Entity
 @Table(name = "event_seat")
-@IdClass(EventSeatId.class)
-@AllArgsConstructor
+@NoArgsConstructor
 @Data
-public class EventSeat implements Serializable {
-		
+public class EventSeat implements Serializable {	
+	
+	@JsonIgnore
+	@EmbeddedId
+	private EventSeatId id;	
+	
 	@ManyToOne
     @JoinColumn(name = "ord_id")	
-    private Order order;
-	
+    private EventOrder order;
+		
 	@ManyToOne
-    @JoinColumn(name = "evt_id", nullable = false)
-	@Id
+    @JoinColumn(name = "evt_id",referencedColumnName="evt_id", insertable=false, updatable=false)
+	@MapsId("evt_id")
     private Event event;
 	
-	@OneToOne
-	@JoinColumns({
-        @JoinColumn(name = "sec_id", referencedColumnName = "sec_id"),
-        @JoinColumn(name = "sea_num", referencedColumnName = "sea_num")        
-    })
+	@ManyToOne
+	@JoinColumn(name = "sea_id",referencedColumnName="sea_id", insertable=false, updatable=false)
 	@JsonManagedReference
-	@Id
-    private final Seat seat;
+	@MapsId("sea_id")
+    private Seat seat;
 
 }

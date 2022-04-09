@@ -2,17 +2,25 @@ package br.fagner.paultickets.model;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+@Embeddable
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class EventSeatId implements Serializable {
+@EqualsAndHashCode
+public class EventSeatId implements Serializable {	
 	
-	private Order order;
-	private Event event;
-	private Seat seat;
+	@Column(name = "evt_id")
+	private String evtId;
+	
+	@Column(name = "sea_id")
+	private String seaId;
 	
 }
