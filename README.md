@@ -7,7 +7,7 @@ mvn package -DskipTests
 docker network create event-network
 
 create database
-docker run -p 3307:3306 --name percona-event --network event-network -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=event -d percona:8.0 --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+docker run -p 3307:3306 --name paul-tickets_percona-event_1 --network event-network -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=event -d percona:8.0 --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
 
 docker build:
 docker build -t event:0.0.1 .

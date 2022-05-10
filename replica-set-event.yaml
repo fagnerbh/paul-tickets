@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: event-replicaset
+  labels:
+    kind: backend
+spec:
+  selector:
+    matchLabels:
+      app: event
+  replicas: 3
+  template:
+    metadata:
+      name: event
+      labels:
+        app: event
+    spec:
+      containers:
+      - name: event
+        image: fagneto/event-repo:1.1
+      imagePullSecrets:
+      - name: eventcred
