@@ -14,3 +14,6 @@ docker build -t event:0.0.1 .
 
 docker run
 docker run -p 8064:8064 --network event-network -d --name event-container event:0.0.1
+
+to access the service by calling its rest endpoint:
+check it out the VM/docker IP in its terminal
