@@ -15,5 +15,15 @@ docker build -t event:0.0.1 .
 docker run
 docker run -p 8064:8064 --network event-network -d --name event-container event:0.0.1
 
-to access the service by calling its rest endpoint:
+to push docker image to docker hub
+docker build -t <hub-user>/<repo-name>[:<tag>] .
+docker push <hub-user>/<repo-name>:<tag>
+
+to access the kubenetes service by calling its rest endpoint:
 check it out the VM/docker IP in its terminal
+
+create secret to docker hub image
+kubectl create secret docker-registry eventcred --docker-server=https://index.docker.io/v1/ --docker-username=fagneto --docker-password=<your-pword> --docker-email=fagnerluiz@yahoo.com.br
+
+to run k6 docker script:
+docker run --rm -i grafana/k6 run - <k6.js
