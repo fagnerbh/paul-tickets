@@ -14,3 +14,5 @@ docker build -t event:0.0.1 .
 
 docker run
 docker run -p 8064:8064 --network event-network -d --name event-container event:0.0.1
+
+to run k6 docker script: docker run --rm -i grafana/k6 run - <k6.js
