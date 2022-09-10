@@ -17,6 +17,6 @@ spec:
     spec:
       containers:
       - name: event
-        image: fagneto/event-repo:1.1
+        image: fagneto/event-repo:1.2
       imagePullSecrets:
       - name: eventcred

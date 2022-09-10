@@ -25,35 +25,35 @@ import lombok.AllArgsConstructor;
 @RequestMapping("/event/eventorder")
 @AllArgsConstructor
 public class EventOrderController {
-	
+
 	private final EventOrderService eventOrder;
-	
+
 	private final SeatDao seatDao;
-	
-	@PostMapping(value="/v0/create", consumes="application/json", produces = "application/json")	
+
+	@PostMapping(value="/v0", consumes="application/json", produces = "application/json")
 	public ResponseEntity<OrderResponse> create(@RequestBody @Valid OrderRequest orderRequest) {
 		try {
 			List<EventSeat> eventSeats = eventOrder.reserveSeats(orderRequest.getUserId(), orderRequest.getEventId(), orderRequest.getSectorId(), orderRequest.getNumSeats());
-			
+
 			OrderResponse responseSuccess = new OrderResponse();
-			
+
 			responseSuccess.setEventId(orderRequest.getEventId());
-			responseSuccess.setSectorId(orderRequest.getSectorId());			
-						
+			responseSuccess.setSectorId(orderRequest.getSectorId());
+
 			List<Integer> seats = new LinkedList<>();
 			for (EventSeat eventSeat: eventSeats) {
 				Seat sea = seatDao.findById(eventSeat.getSeat().getId()).orElseThrow(() -> new ReservationException("no seats found."));
-				
+
 				seats.add(sea.getSeaNum());
 			}
 			responseSuccess.setSeats(seats);
-			
-			return new ResponseEntity<OrderResponse>(responseSuccess, HttpStatus.CREATED);
+
+			return new ResponseEntity<>(responseSuccess, HttpStatus.CREATED);
 		} catch (ReservationException e) {
 			OrderResponse responseConflict = new OrderResponse();
 			responseConflict.setMessage(e.getMessage());
-			
-			return new ResponseEntity<OrderResponse>(responseConflict, HttpStatus.CONFLICT);
+
+			return new ResponseEntity<>(responseConflict, HttpStatus.CONFLICT);
 		}
 	}
 

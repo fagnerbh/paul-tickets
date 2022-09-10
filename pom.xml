@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>br.fagner.paultickets</groupId>
 	<artifactId>PaulTickets</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.2</version>
 	<name>PaulTickets</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>

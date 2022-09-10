@@ -23,7 +23,7 @@ to access the kubenetes service by calling its rest endpoint:
 check it out the VM/docker IP in its terminal
 
 create secret to docker hub image
-kubectl create secret docker-registry eventcred --docker-server=https://index.docker.io/v1/ --docker-username=fagneto --docker-password=<your-pword> --docker-email=fagnerluiz@yahoo.com.br
+kubectl create secret docker-registry eventcred --docker-server=https://index.docker.io/v2/ --docker-username=fagneto --docker-password=<your-pword> --docker-email=fagnerluiz@yahoo.com.br
 
 to run k6 docker script:
 docker run --rm -i grafana/k6 run - <k6.js
