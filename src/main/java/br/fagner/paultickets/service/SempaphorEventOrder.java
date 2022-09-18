@@ -41,6 +41,7 @@ import lombok.extern.log4j.Log4j2;
 @Service
 @Transactional(rollbackFor = { ReservationException.class })
 @Log4j2
+@Qualifier("sempaphorEventOrder")
 public class SempaphorEventOrder implements EventOrderService {
 
 	@Autowired
@@ -92,7 +93,7 @@ public class SempaphorEventOrder implements EventOrderService {
 				throw new ReservationException("Could not reserve all seats");
 			}
 
-			AtomicReference<String>[] arraySeats = concurrentControll(userId, eventId, sectorId, seatList);
+			AtomicReference<String>[] arraySeats = concurrentControll(userId, eventId, sectorId, seatList, takenSeatsCache);
 
 			EventOrder reserveOrder = new EventOrder();
 
@@ -140,16 +141,4 @@ public class SempaphorEventOrder implements EventOrderService {
 
 		return reservedSeats;
 	}
-
-	private AtomicReference<String>[] concurrentControll(String userId, String eventId, String sectorId, List<Seat> seatList) {
-		AtomicReference<String>[] arrayAtmReferences = new AtomicReference[seatList.size()];
-
-		int count = 0;
-		for (Seat seat: seatList) {
-			arrayAtmReferences[count++] = takenSeatsCache.setTakenEventSeat(eventId + sectorId + String.valueOf(seat.getSeaNum()), userId);
-		}
-
-		return arrayAtmReferences;
-	}
-
 }
