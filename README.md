@@ -22,8 +22,22 @@ docker push <hub-user>/<repo-name>:<tag>
 to access the kubenetes service by calling its rest endpoint:
 check it out the VM/docker IP in its terminal
 
+Kubernetes
+------------
+
 create secret to docker hub image
 kubectl create secret docker-registry eventcred --docker-server=https://index.docker.io/v2/ --docker-username=fagneto --docker-password=<your-pword> --docker-email=fagnerluiz@yahoo.com.br
 
+to set minikube to Oracle VM:
+minikube start --driver=virtualbox
+minikube config set driver virtualbox
+
+
 to run k6 docker script:
 docker run --rm -i grafana/k6 run - <k6.js
+
+to run prometheus:
+docker run -p 9090:9090 -v config/prometheus.yml:/etc/prometheus/prometheus.yml prom/prometheus
+
+to run grafana:
+docker run -p 3000:3000 grafana/granfana:latest

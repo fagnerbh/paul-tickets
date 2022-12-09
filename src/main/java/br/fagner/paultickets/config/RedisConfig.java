@@ -1,5 +1,6 @@
 package br.fagner.paultickets.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
@@ -18,10 +19,13 @@ import br.fagner.paultickets.service.RedisMessageSubscriber;
 @Configuration
 public class RedisConfig {
 
+	@Value(value = "${spring.redis.host}")
+	private String redisHostName;
+
 	@Bean
 	public JedisConnectionFactory createRedisConnectionFactory() {
 		RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
-        redisStandaloneConfiguration.setHostName("192.168.0.8");
+        redisStandaloneConfiguration.setHostName(redisHostName);
         redisStandaloneConfiguration.setPort(6379);
 
         return new JedisConnectionFactory(redisStandaloneConfiguration);

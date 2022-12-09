@@ -2,6 +2,6 @@ FROM openjdk:11
 
 EXPOSE 8064
 
-COPY target/PaulTickets-1.2.jar /usr/src
+COPY target/PaulTickets-1.3.jar /usr/src
 
-CMD ["java", "-jar", "/usr/src/PaulTickets-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-jar", "/usr/src/PaulTickets-1.3.jar"]

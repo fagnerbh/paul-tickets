@@ -25,4 +25,9 @@ public class LocalMemoryTakenSeatsCache implements TakenSeatsCache<String> {
 		return takenSeatsMap.get(seatKey);
 	}
 
+	@Override
+	public void removeValueInKey(String seatKey) {
+		takenSeatsMap.remove(seatKey);
+	}
+
 }

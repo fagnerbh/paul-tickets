@@ -74,6 +74,9 @@ public class SempaphorEventOrder implements EventOrderService {
 		Semaphore secSemaphor = null;
 		boolean semaphorAquired = true;
 		try {
+			// tried to use semaphor for each venue's sector requests.
+			// But with tests using k6 showed it holds too many memory and
+			// incresed response latence.
 			secSemaphor = edventSeatSemaphorCache.getSectorSemaphor(sectorId);
 			semaphorAquired = secSemaphor.tryAcquire(2, TimeUnit.SECONDS);
 
@@ -116,7 +119,8 @@ public class SempaphorEventOrder implements EventOrderService {
 				eventSeat.setEvent(targetEvent);
 				eventSeat.setSeat(seat);
 
-				String atmUser = takenSeatsCache.getTakenEventSeat(eventId + sectorId + String.valueOf(seat.getSeaNum())).get();
+				String seatKey = eventId + sectorId + String.valueOf(seat.getSeaNum());
+				String atmUser = takenSeatsCache.getTakenEventSeat(seatKey).get();
 
 				for (AtomicReference<String> controllCache : arraySeats) {
 					if (!controllCache.get().equals(atmUser)) {
@@ -127,6 +131,8 @@ public class SempaphorEventOrder implements EventOrderService {
 				reserveOrder = orderDao.save(reserveOrder);
 				eventSeatDao.save(eventSeat);
 				reservedSeats.add(eventSeat);
+
+				takenSeatsCache.removeValueInKey(seatKey);
 			}
 
 		} catch (SectorNotFoundException e) {

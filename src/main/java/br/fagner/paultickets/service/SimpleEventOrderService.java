@@ -10,6 +10,8 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.fagner.paultickets.component.TakenSeatsCache;
 import br.fagner.paultickets.dao.EventDao;
@@ -28,7 +30,9 @@ import br.fagner.paultickets.value.OrderStatusEnum;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
+@Service
 @Qualifier("simpleEventOrderService")
+@Transactional(rollbackFor = { ReservationException.class })
 public class SimpleEventOrderService implements EventOrderService {
 
 	@Autowired
@@ -45,6 +49,7 @@ public class SimpleEventOrderService implements EventOrderService {
 
 
 	@Autowired
+	//TODO: Implement a distributed seats cache using redis for cluster version (maybe redisson, which has lock operations for Redis)
 	private TakenSeatsCache<String> takenSeatsCache;
 
 	@Override
@@ -59,7 +64,7 @@ public class SimpleEventOrderService implements EventOrderService {
 
 		User user = userDao.findById(userId).orElseThrow(() -> new ReservationException("user not found"));
 		Event targetEvent = eventDao.findById(eventId).orElseThrow(() -> new ReservationException("Event not found"));
-		//retrieves seats for update (locking the given seats registers)
+		//retrieves seats for update
 		List<Seat> seatList = eventSeatDao.findNumSeatsForEventAvailable(eventId, sectorId, numSeats);
 
 		// if the number of seats retrieved from the database doesn't match the total request, the reserve is failed.
@@ -91,7 +96,8 @@ public class SimpleEventOrderService implements EventOrderService {
 			eventSeat.setEvent(targetEvent);
 			eventSeat.setSeat(seat);
 
-			String atmUser = takenSeatsCache.getTakenEventSeat(eventId + sectorId + String.valueOf(seat.getSeaNum())).get();
+			String seatKey = eventId + sectorId + String.valueOf(seat.getSeaNum());
+			String atmUser = takenSeatsCache.getTakenEventSeat(seatKey).get();
 
 			for (AtomicReference<String> controllCache : arraySeats) {
 				if (!controllCache.get().equals(atmUser)) {
@@ -102,6 +108,8 @@ public class SimpleEventOrderService implements EventOrderService {
 			reserveOrder = orderDao.save(reserveOrder);
 			eventSeatDao.save(eventSeat);
 			reservedSeats.add(eventSeat);
+
+			takenSeatsCache.removeValueInKey(seatKey);
 		}
 
 		return reservedSeats;

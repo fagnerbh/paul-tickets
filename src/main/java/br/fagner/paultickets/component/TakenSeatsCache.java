@@ -8,4 +8,6 @@ public interface TakenSeatsCache<T> {
 
 	public AtomicReference<T> getTakenEventSeat(String seatKey);
 
+	public void removeValueInKey(String seatKey);
+
 }

@@ -3,14 +3,14 @@ import exec from 'k6/execution';
 
 export const options = {
 		   stages: [
+		    { duration: '1m', target: 5 },
 		    { duration: '1m', target: 10 },
-		    { duration: '1m', target: 20 },
 		    { duration: '1m', target: 1 },
 		  ],		  
 		};
 
 export default function () {
-  const url = 'http://192.168.0.8:8064/event/eventorder/v1';
+  const url = 'http://192.168.0.8:30008/event/eventorder/v1';
   let seatSeed = (exec.vu.iterationInInstance % 10) * 100;
   let mod3 = 0;  
 
