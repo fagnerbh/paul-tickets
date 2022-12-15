@@ -1,5 +1,6 @@
 # paul-tickets
-concurrent requisition test to a limited resource queue.
+concurrent requests test to a limited resource queue. Simulates 
+concurrent requests for tickets for events in numbered seat venues.
 
 create jar
 mvn package -DskipTests
@@ -26,7 +27,7 @@ Kubernetes
 ------------
 
 create secret to docker hub image
-kubectl create secret docker-registry eventcred --docker-server=https://index.docker.io/v2/ --docker-username=fagneto --docker-password=<your-pword> --docker-email=fagnerluiz@yahoo.com.br
+kubectl create secret docker-registry eventcred --docker-server=https://index.docker.io/v2/ --docker-username=<docker-username> --docker-password=<your-pword> --docker-email=<email>
 
 to set minikube to Oracle VM:
 minikube start --driver=virtualbox
