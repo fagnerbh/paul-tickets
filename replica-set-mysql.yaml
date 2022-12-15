@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: percona-8-replicaset
+  labels:
+    kind: database
+spec:
+  selector:
+    matchLabels:
+      app: percona
+  replicas: 1
+  template:
+    metadata:
+      name: percona8
+      labels:
+        app: percona
+    spec:
+      containers:
+      - name: percona8
+        image: percona:8.0
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: root
+        - name: MYSQL_DATABASE
+          value: event

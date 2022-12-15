@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: event-replicaset
+  labels:
+    kind: backend
+spec:
+  selector:
+    matchLabels:
+      app: event
+  replicas: 3
+  template:
+    metadata:
+      name: event
+      labels:
+        app: event
+    spec:
+      containers:
+      - name: event
+        image: fagneto/event-repo:1.3.0
+        env:
+        - name: spring.datasource.url
+          value: jdbc:mysql://database:3306/event?serverTimezone=UTC&createDatabaseIfNotExist=true
+        - name: spring.redis.host
+          value: 192.168.0.8
+      imagePullSecrets:
+      - name: eventcred

@@ -1,0 +1,10 @@
+global:
+  scrape_interval: 5s
+  
+scrape_configs:
+  - job_name: "event-seats-request"
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets: ["192.168.0.8:8064"]
+        labels:
+          application: "event-order"
