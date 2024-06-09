@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import br.fagner.paultickets.model.EventSeat;
 import br.fagner.paultickets.model.EventSeatId;
 import br.fagner.paultickets.model.Seat;
+import br.fagner.paultickets.model.dto.EventSectorDto;
 
 public interface EventSeatDao extends JpaRepository<EventSeat, EventSeatId> {
 
@@ -23,5 +24,10 @@ public interface EventSeatDao extends JpaRepository<EventSeat, EventSeatId> {
 	List<Seat> findNumSeatsForEventAvailable(@Param ("eventId") String eventId, @Param ("secId") String sectorId, @Param ("numSeat") Collection<Integer> numSeat );
 
 
+	@Query("SELECT new br.fagner.paultickets.model.dto.EventSectorDto(e.id, se.id, COUNT(s.id)) " +
+            "FROM Event e INNER JOIN e.seat s " +
+	        "INNER JOIN s.sector se " +
+            "GROUP BY e.id, se.id")
+     List<EventSectorDto> getSeatListbyEventAndSector();
 
 }

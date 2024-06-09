@@ -1,5 +1,6 @@
 package br.fagner.paultickets.model;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,19 +25,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Sector {
-	
+public class Sector implements Serializable {
+
 	@Id
     @Column(name = "sec_id")
     private String id;
-	
+
 	@EqualsAndHashCode.Exclude
 	@ManyToOne
     @JoinColumn(name = "vnu_id")
     private Venue venue;
-	
+
 	@EqualsAndHashCode.Exclude
-    @OneToMany(mappedBy = "sector", fetch = FetchType.LAZY)    
+    @OneToMany(mappedBy = "sector", fetch = FetchType.LAZY)
     @JsonIgnore
     private final Set<Seat> seats = new HashSet<>();
 }
