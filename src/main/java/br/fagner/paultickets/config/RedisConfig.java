@@ -1,6 +1,5 @@
 package br.fagner.paultickets.config;
 
-import java.io.File;
 import java.time.Duration;
 
 import org.redisson.Redisson;
@@ -23,7 +22,9 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import br.fagner.paultickets.service.EventOrderService;
 import br.fagner.paultickets.service.RedisMessageSubscriber;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 @Configuration
 public class RedisConfig {
 
@@ -84,9 +85,8 @@ public class RedisConfig {
 
     @Bean
     RedissonClient redissonClientConfig() {
-        File redisConfFile = new File("singleNodeConfig.yaml");
-
-        Config config = Config.fromYAML(redisConfFile);
+        Config config = new Config();
+        config.useSingleServer().setAddress("redis://192.168.0.8:6379");
         return Redisson.create(config);
     }
 

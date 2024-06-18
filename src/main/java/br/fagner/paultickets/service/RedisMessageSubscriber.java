@@ -21,7 +21,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class RedisMessageSubscriber implements MessageListener {
 
-	@Qualifier("simpleEventOrderService")
+	@Qualifier("externalCacheEventOrderService")
 	private final EventOrderService eventOrderService;
 
 	private static final ObjectMapper mapper = new ObjectMapper();
