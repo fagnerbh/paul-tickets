@@ -18,7 +18,7 @@ public class OrderReceiver {
 		try {
 			ApplicationContext ctx = SpringApplication.run(PaulTicketsApplication.class);
 
-			EventOrderService eventOrder = ctx.getBean(EventOrderService.class);
+			EventOrderService eventOrder = ctx.getBean("externalCacheEventOrderService", EventOrderService.class);
 
 			eventOrder.reserveSeats(order.getUserId(), order.getEventId(), order.getSectorId(), order.getNumSeats());
 

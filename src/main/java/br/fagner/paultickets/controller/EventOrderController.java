@@ -6,6 +6,7 @@ import java.util.concurrent.Callable;
 
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,11 +25,9 @@ import br.fagner.paultickets.model.EventSeat;
 import br.fagner.paultickets.model.Seat;
 import br.fagner.paultickets.service.EventOrderService;
 import br.fagner.paultickets.service.RedisMessagePublisher;
-import lombok.AllArgsConstructor;
 
 @RestController
 @RequestMapping("/event/eventorder")
-@AllArgsConstructor
 public class EventOrderController {
 
 	private final EventOrderService eventOrder;
@@ -37,7 +36,14 @@ public class EventOrderController {
 
 	private final RedisMessagePublisher redisMessagePublisher;
 
-	private static final ObjectMapper mapper = new ObjectMapper();
+	public EventOrderController(@Qualifier("externalCacheEventOrderService") EventOrderService eventOrder, SeatDao seatDao, RedisMessagePublisher redisMessagePublisher) {
+        super();
+        this.eventOrder = eventOrder;
+        this.seatDao = seatDao;
+        this.redisMessagePublisher = redisMessagePublisher;
+    }
+
+    private static final ObjectMapper mapper = new ObjectMapper();
 
 	@PostMapping(value="/v0", consumes="application/json", produces = "application/json")
 	public ResponseEntity<OrderResponse> create(@RequestBody @Valid OrderRequest orderRequest) {

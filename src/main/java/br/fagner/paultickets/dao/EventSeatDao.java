@@ -2,6 +2,7 @@ package br.fagner.paultickets.dao;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -10,7 +11,6 @@ import org.springframework.data.repository.query.Param;
 import br.fagner.paultickets.model.EventSeat;
 import br.fagner.paultickets.model.EventSeatId;
 import br.fagner.paultickets.model.Seat;
-import br.fagner.paultickets.model.dto.EventSectorDto;
 
 public interface EventSeatDao extends JpaRepository<EventSeat, EventSeatId> {
 
@@ -24,10 +24,10 @@ public interface EventSeatDao extends JpaRepository<EventSeat, EventSeatId> {
 	List<Seat> findNumSeatsForEventAvailable(@Param ("eventId") String eventId, @Param ("secId") String sectorId, @Param ("numSeat") Collection<Integer> numSeat );
 
 
-	@Query("SELECT new br.fagner.paultickets.model.dto.EventSectorDto(e.id.evtId, se.id, COUNT(s.id)) " +
-            "FROM EventSeat e INNER JOIN e.seat s " +
-	        "INNER JOIN s.sector se " +
+	@Query("SELECT e.id as venue, se.id as sector, COUNT(s.id) as seatNum " +
+            "FROM Venue e INNER JOIN e.sector se " +
+	        "INNER JOIN se.seats s " +
             "GROUP BY e.id, se.id")
-     List<EventSectorDto> getSeatListbyEventAndSector();
+     List<Map<String, Object>> getSeatListbyEventAndSector();
 
 }

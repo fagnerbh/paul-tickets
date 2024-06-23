@@ -15,16 +15,18 @@ import com.google.gson.JsonSyntaxException;
 
 import br.fagner.paultickets.controller.request.OrderRequest;
 import br.fagner.paultickets.exception.ReservationException;
-import lombok.AllArgsConstructor;
 
 @Service
-@AllArgsConstructor
 public class RedisMessageSubscriber implements MessageListener {
 
-	@Qualifier("externalCacheEventOrderService")
 	private final EventOrderService eventOrderService;
 
-	private static final ObjectMapper mapper = new ObjectMapper();
+	public RedisMessageSubscriber(@Qualifier("externalCacheEventOrderService") EventOrderService eventOrderService) {
+        super();
+        this.eventOrderService = eventOrderService;
+    }
+
+    private static final ObjectMapper mapper = new ObjectMapper();
 
 	private static final Gson gson = new Gson();
 

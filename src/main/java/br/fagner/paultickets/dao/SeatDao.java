@@ -9,6 +9,6 @@ import br.fagner.paultickets.model.Sector;
 
 public interface SeatDao extends JpaRepository<Seat, String> {
 
-    public Optional<Seat> findBySectorAndSeatNum(Sector sector, int seatNum);
+    public Optional<Seat> findBySectorAndSeaNum(Sector sector, int seatNum);
 
 }

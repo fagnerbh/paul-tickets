@@ -26,14 +26,12 @@ import br.fagner.paultickets.model.Seat;
 import br.fagner.paultickets.model.Sector;
 import br.fagner.paultickets.model.User;
 import br.fagner.paultickets.value.OrderStatusEnum;
-import lombok.RequiredArgsConstructor;
 
 /**
  * Searches in an external previously loaded event seats cache for rooms available before
  * regestering a pre order
  */
 @Service
-@RequiredArgsConstructor
 @Qualifier("externalCacheEventOrderService")
 public class ExternalCacheEventOrderService implements EventOrderService {
 
@@ -46,6 +44,15 @@ public class ExternalCacheEventOrderService implements EventOrderService {
     private final OrderDao orderDao;
 
     private final EventSeatDao eventSeatDao;
+
+
+    public ExternalCacheEventOrderService(SelectSeatsCache selectSeatsCache, UserDao userDao, SeatDao seatDao, OrderDao orderDao, EventSeatDao eventSeatDao) {
+        this.selectSeatsCache = selectSeatsCache;
+        this.userDao = userDao;
+        this.seatDao = seatDao;
+        this.orderDao = orderDao;
+        this.eventSeatDao = eventSeatDao;
+    }
 
     @Override
     public List<EventSeat> reserveSeats(String userId, String eventId, String sectorId, Collection<Integer> numSeats) throws ReservationException {
@@ -62,7 +69,7 @@ public class ExternalCacheEventOrderService implements EventOrderService {
 
         final Iterator<Integer> seatIt = numSeats.iterator();
         while(seatIt.hasNext()) {
-            Seat seat = seatDao.findBySectorAndSeatNum(sector, seatIt.next()).orElseThrow(() -> new ReservationException("user not found"));
+            Seat seat = seatDao.findBySectorAndSeaNum(sector, seatIt.next()).orElseThrow(() -> new ReservationException("user not found"));
 
             registerUserEventOrders(eventId, reservedSeats, user, seat);
         }
