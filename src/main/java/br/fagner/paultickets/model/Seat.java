@@ -22,17 +22,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class Seat implements Serializable {
-	
-	@Id
+
+    @Id
     @GeneratedValue(generator = "uuid-gen")
     @GenericGenerator(name = "uuid-gen", strategy = "uuid2")
     @Column(name = "sea_id")
 	private String id;
-		
+
 	@OneToOne
     @JoinColumn(name = "sec_id", nullable = false)
-    private Sector sector;	
-	
+    private Sector sector;
+
 	@Column(name="sea_num", nullable = false)
     private int seaNum;
 }

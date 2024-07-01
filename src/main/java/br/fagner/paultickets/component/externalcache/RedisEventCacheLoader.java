@@ -4,8 +4,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.cache.Cache;
-import org.springframework.cache.CacheManager;
+import org.redisson.api.RScript;
+import org.redisson.api.RedissonClient;
+import org.redisson.client.codec.StringCodec;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
@@ -21,7 +22,7 @@ public class RedisEventCacheLoader implements EventCacheLoader {
 
     private final EventSeatService eventSeatService;
 
-    private final CacheManager cacheManager;
+    private final RedissonClient redissonClient;
 
     @Override
     public void eventCacheInit() {
@@ -34,16 +35,39 @@ public class RedisEventCacheLoader implements EventCacheLoader {
             return;
         }
 
-        Cache cache = cacheManager.getCache("event-cache");
+        //RMapCache<String, int []> mapCache = redissonClient.getMapCache("event-cache");
 
         for (Map<String, Object> dto: eventSectors) {
-            int [] seatArray = new int[Integer.valueOf(((Long) dto.get("seatNum")).toString())];
+            Short[] seatArray = new Short[Short.valueOf(((Long) dto.get("seatNum")).toString())];
+            Arrays.fill(seatArray, Short.valueOf("0"));
 
-            Arrays.stream(seatArray).forEach(seat -> seat = 0);
+            String[] seatArrayStrings = Arrays.stream(seatArray)
+                                              .map(Object::toString)
+                                              .toArray(String[]::new);
+                        // Construir o script Lua para JSON.ARRINSERT
+            String script = "local arr = redis.call('JSON.GET', KEYS[1], '$') " +
+                    "if not arr or arr == nil or arr == '' then " +
+                    "  arr = {} " +
+                    "else " +
+                    "  arr = cjson.decode(arr) " +
+                    "end " +
+                    "for i = 1, #ARGV do " +
+                    "  table.insert(arr, tonumber(ARGV[i])) " +
+                    "end " +
+                    "redis.call('JSON.SET', KEYS[1], '.', cjson.encode(arr)) " +
+                    "return 1";
 
-            cache.put(String.format("%s:%s", dto.get("venue"), dto.get("sector")), seatArray);
+            redissonClient.getScript(StringCodec.INSTANCE).eval(RScript.Mode.READ_WRITE, script, RScript.ReturnType.INTEGER,
+                    java.util.Collections.singletonList(String.format("event-cache::%s:%s", dto.get("venue"), dto.get("sector"))),
+                    (Object[]) seatArrayStrings);
 
-            log.info("Cache sector array for key {}, {}: {}", dto.get("key"), dto.get("key"), seatArray);
+            log.info("Cache sector array for key {}, {}: {}", dto.get("key"), dto.get("key"), Arrays.toString(seatArray));
+
+            //RBucket<String> bucket = redissonClient.getBucket(String.format("event-cache::%s:%s", dto.get("venue"), dto.get("sector")));
+            //bucket.set(jsonArray);
+
+            //mapCache.put(String.format("%s:%s", dto.get("venue"), dto.get("sector")), seatArray);
+
         }
 
     }
