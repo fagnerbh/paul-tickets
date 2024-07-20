@@ -11,17 +11,22 @@ spec:
   replicas: 3
   template:
     metadata:
-      name: event
       labels:
         app: event
     spec:
       containers:
       - name: event
-        image: fagneto/event-repo:1.3.0
+        image: fagneto/event-repo:1.4.0
         env:
         - name: spring.datasource.url
           value: jdbc:mysql://database:3306/event?serverTimezone=UTC&createDatabaseIfNotExist=true
         - name: spring.redis.host
-          value: 192.168.0.8
+          value: "redisservice"
+        - name: spring.data.redis.host
+          value: "redisservice"
+        - name: spring.data.redis.port
+          value: "6379"
+        - name: spring.redis.port
+          value: "6379"     
       imagePullSecrets:
       - name: eventcred

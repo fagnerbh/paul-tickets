@@ -2,6 +2,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: redisservice
+  labels:
+    app: redis
 spec:
   type: ClusterIP
   ports:

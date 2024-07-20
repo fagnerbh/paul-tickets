@@ -74,7 +74,7 @@ public class RedisConfig {
     @Bean
     RedissonClient redissonClientConfig() {
         Config config = new Config();
-        config.useSingleServer().setAddress("redis://192.168.0.8:6379");
+        config.useSingleServer().setAddress("redis://" + redisHostName + ":6379");
         return Redisson.create(config);
     }
 
